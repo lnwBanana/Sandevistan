@@ -9,12 +9,15 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-      - run: |
-          unzip -q sandevistan-mod.zip
-          cd sandevistan
+      - name: Build
+        run: |
+          for z in *.zip; do [ -f "$z" ] && unzip -q -o "$z"; done
+          ls -R | head -40
+          D=$(dirname "$(find . -name gradlew -print -quit)")
+          cd "$D"
           chmod +x gradlew
           ./gradlew build
       - uses: actions/upload-artifact@v4
         with:
           name: sandevistan-jar
-          path: sandevistan/build/libs/*.jar
+          path: "**/build/libs/*.jar"
